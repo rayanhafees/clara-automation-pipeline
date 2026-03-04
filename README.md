@@ -194,10 +194,6 @@ CLARA-AUTOMATION-PIPELINE
 ---
 
 
-### Pipeline B – Onboarding Update
-
-![Pipeline B](images/pipeline_b.png)
-
 
 
 # How to Run the Project
