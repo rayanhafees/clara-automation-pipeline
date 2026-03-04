@@ -297,10 +297,10 @@ A short demonstration video shows:
 
 # Author
 
-Rayan
-Rayan Mohammed
-22BCE8791
-NEO301750
-VIT
-ZenTrades AI 
-Placement drive
+Rayan Mohammed  
+B.Tech Computer Science Engineering  
+Vellore Institute of Technology (VIT)  
+22BCE8791  
+NEO301750  
+GitHub: https://github.com/rayanhafees  
+ZenTrades AI Placement Drive 
