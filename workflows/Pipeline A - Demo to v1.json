@@ -1,0 +1,231 @@
+{
+  "name": "Pipeline A - Demo to v1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9dfde279-e121-401a-9f08-54b5d746c6aa",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n\n  const company = (item.json.company_name || \"unknown\")\n    .toLowerCase()\n    .replace(/[^a-z0-9 ]/g, \"\")\n    .replace(/\\s+/g, \"-\");\n\n  const path = `/home/node/.n8n-files/outputs/accounts/${company}/v1/account_memo_v1.json`;\n\n  const jsonString = JSON.stringify(item.json, null, 2);\n\n  return {\n    json: {\n      filePath: path\n    },\n    binary: {\n      data: {\n        data: Buffer.from(jsonString).toString('base64'),\n        mimeType: 'application/json',\n        fileName: 'account_memo_v1.json'\n      }\n    }\n  };\n\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "ce49b776-c243-45b6-8e9a-c840cac2c8ed",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/demo/demo_call_*.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        256,
+        0
+      ],
+      "id": "6de2ff95-73c5-4473-8465-3e2fd4b975c9",
+      "name": "Load Transcript"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        0
+      ],
+      "id": "d9748e5c-b1fd-4f82-9736-6137a8a1afc6",
+      "name": "Parse Transcript Text"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n\n  const text = item.json.data;\n\n  const result = {\n    company_name: null,\n    services: [],\n    business_hours: null\n  };\n\n  // extract company name\n  const companyMatch = text.match(/Company:\\s*(.*)/i);\n  if (companyMatch) {\n    result.company_name = companyMatch[1].trim();\n  }\n\n  // extract services\n  if (text.toLowerCase().includes(\"residential\")) {\n    result.services.push(\"Residential electrical work\");\n  }\n  if (text.toLowerCase().includes(\"commercial\")) {\n    result.services.push(\"Commercial electrical work\");\n  }\n  if (text.toLowerCase().includes(\"emergency\")) {\n    result.services.push(\"Emergency service calls\");\n  }\n\n  // extract business hours\n  const hoursMatch = text.match(/Business hours:\\s*(.*)/i);\n  if (hoursMatch) {\n    result.business_hours = hoursMatch[1];\n  } else {\n    result.business_hours = \"Not specified\";\n  }\n\n  return { json: result };\n\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "23d71d4c-7c98-4cd0-9c65-557417b85c57",
+      "name": "Transform to JSON"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/.n8n-files/demo/account_memo_v1.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "2f226bd9-3cf0-43b0-8014-31df4cb21387",
+      "name": "Save Account Memo"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  return {\n    json: {\n      agent_name: \"Ben's Electrical Assistant\",\n      voice_style: \"friendly professional\",\n      call_flow: {\n        during_hours: \"Answer calls and book electrical service jobs\",\n        after_hours: \"Take message or route emergency electrical calls\"\n      },\n      version: \"v1\"\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        0
+      ],
+      "id": "dbdbf8f7-5745-408b-bbc7-ffbc1d5aa239",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1504,
+        0
+      ],
+      "id": "23ae599a-b67f-48e9-af06-480ffef36c8f",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/.n8n-files/demo/agent_spec_v1.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1712,
+        0
+      ],
+      "id": "ed7bcf3e-3ee5-43bd-b7c8-95dcae5490f1",
+      "name": "Save Agent Spec"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Load Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Save Account Memo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Transcript": {
+      "main": [
+        [
+          {
+            "node": "Parse Transcript Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Transcript Text": {
+      "main": [
+        [
+          {
+            "node": "Transform to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform to JSON": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Account Memo": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Save Agent Spec",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6d04e480-ddb6-4ef9-bb61-600e9c4d5763",
+  "meta": {
+    "instanceId": "852d676acb2886d1872275ba0464ddffe37dec1857634327ea42510cbe0f46b5"
+  },
+  "id": "41XcqqKSGlm28wEW",
+  "tags": []
+}

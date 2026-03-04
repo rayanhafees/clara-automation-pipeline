@@ -1,0 +1,360 @@
+{
+  "name": "Pipeline B - Update Client",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bbfbc494-47f1-4512-8fb7-3936eecb233b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/onboarding/onboarding_call_1.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "131a8243-d7c1-4c14-8927-b180e0dcd78c",
+      "name": "Load Onboarding Transcript"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "27a1f0cc-0eed-459a-a1da-b5b7331c2ff9",
+      "name": "Parse Onboarding Transcript"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/demo/account_memo_v1.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "ddfad82b-7bf2-4f19-b6b9-caad4af6e96c",
+      "name": "Load Memo v1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "9f28d530-db7f-49b9-a0fa-46478b5a97ea",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const memo = $input.item.json;\n\nmemo.updated_from_onboarding = true;\nmemo.last_updated = new Date().toISOString();\n\nreturn [\n  {\n    json: memo\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "88cc510e-bd5e-4109-b2b6-9f32286897b0",
+      "name": "Update Memo v2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n{\n  json: {\n    version: \"v2\",\n    changes: [\n      \"Added business hours\",\n      \"Updated team size\",\n      \"Captured onboarding info\"\n    ]\n  }\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        -176
+      ],
+      "id": "7cb2a7a1-db51-4258-a79f-09144e964242",
+      "name": "Generate Changelog"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/.n8n-files/outputs/accounts/bens-electrical/v2/account_memo_v2.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        0
+      ],
+      "id": "d8f1ccf9-68f6-4539-b6e9-e015874fed23",
+      "name": "Save Account Memo v2"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "cb84b7df-4ace-47f1-baf2-93c438b1342c",
+      "name": "Convert Memo v2"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1456,
+        -192
+      ],
+      "id": "c496e4d8-4d07-44e9-b70e-afd0256f7a53",
+      "name": "Convert Changelog"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n{\n  json: {\n    agent_name: \"Ben's Electrical Assistant\",\n    voice_style: \"friendly professional\",\n    call_flow: {\n      during_hours: \"Answer calls and book electrical service jobs\",\n      after_hours: \"Take message or route emergency electrical calls\"\n    },\n    version: \"v2\"\n  }\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        208
+      ],
+      "id": "7cbead73-8632-4c8a-9201-147b16c9200c",
+      "name": "Generate Agent Spec v2"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        208
+      ],
+      "id": "61d33ca7-41f1-4f7f-81a0-ed4ed29628ef",
+      "name": "Convert Agent Spec v2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/.n8n-files/outputs/accounts/bens-electrical/v2/agent_spec_v2.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        208
+      ],
+      "id": "46d978ff-1f4a-4f32-8fbe-f8ddc6e05432",
+      "name": "Save Agent Spec v2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/.n8n-files/outputs/accounts/bens-electrical/v2/changelog.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        1664,
+        -192
+      ],
+      "id": "1d39bec3-334a-42f4-b8f8-662286943709",
+      "name": "Save Changelog"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Load Onboarding Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Onboarding Transcript": {
+      "main": [
+        [
+          {
+            "node": "Parse Onboarding Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Onboarding Transcript": {
+      "main": [
+        [
+          {
+            "node": "Load Memo v1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Memo v1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update Memo v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Memo v2": {
+      "main": [
+        [
+          {
+            "node": "Convert Memo v2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Changelog",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Agent Spec v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Changelog": {
+      "main": [
+        [
+          {
+            "node": "Convert Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Account Memo v2": {
+      "main": [
+        []
+      ]
+    },
+    "Convert Memo v2": {
+      "main": [
+        [
+          {
+            "node": "Save Account Memo v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Changelog": {
+      "main": [
+        [
+          {
+            "node": "Save Changelog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Agent Spec v2": {
+      "main": [
+        [
+          {
+            "node": "Convert Agent Spec v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Agent Spec v2": {
+      "main": [
+        [
+          {
+            "node": "Save Agent Spec v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Changelog": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "81323589-b94f-4c63-a0ec-ccdfb07bdbd9",
+  "meta": {
+    "instanceId": "852d676acb2886d1872275ba0464ddffe37dec1857634327ea42510cbe0f46b5"
+  },
+  "id": "GShQvaPbLOQWj50k",
+  "tags": []
+}
