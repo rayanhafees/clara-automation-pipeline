@@ -298,4 +298,9 @@ A short demonstration video shows:
 # Author
 
 Rayan
-Computer Science Engineering Student
+Rayan Mohammed
+22BCE8791
+NEO301750
+VIT
+ZenTrades AI 
+Placement drive
