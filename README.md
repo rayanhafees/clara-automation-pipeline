@@ -124,7 +124,7 @@ Pipeline B performs:
 
 ### Pipeline A – Demo Call Processing
 
-![Pipeline A](images/pipeline_a.png)
+![Pipeline A](images/pipeline_2.png)
 
 
 # Outputs – Version 2
