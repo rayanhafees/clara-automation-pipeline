@@ -93,9 +93,9 @@ These files represent the **initial configuration of the AI assistant** based on
 
 ## Workflow Example
 
-Below is the Pipeline A workflow implemented in n8n.
+## Pipeline A – Demo Call Processing
 
-![Pipeline A](images/Pipeline_1.png)
+![Pipeline A Workflow](images/Pipeline_1.png)
 
 
 
@@ -122,9 +122,9 @@ Pipeline B performs:
 
 ---
 
-### Pipeline A – Demo Call Processing
+## Pipeline B – Onboarding Update
 
-![Pipeline A](images/pipeline_2.png)
+![Pipeline B Workflow](images/Pipeline_2.png)
 
 
 # Outputs – Version 2
@@ -142,6 +142,10 @@ account_memo_v2.json
 agent_spec_v2.json
 changelog.json
 ```
+
+## Example Generated Outputs
+
+![JSON Output Example](images/json_output.png)
 
 ### Changes captured
 
